@@ -13,6 +13,14 @@ from PIL import Image
 from io import BytesIO
 import base64
 import tempfile
+# ─── Security Check (Passkey via URL) ────────────────────────────────────────
+query_params = st.query_params
+user_key = query_params.get("key", None)
+required_key = st.secrets["security"]["access_key"]
+
+if user_key != required_key:
+    st.error("🔒 Access Denied: Invalid or missing key in URL.")
+    st.stop()
 
 
 def analyze_video_with_snapshots(video_url, interval_sec=10, max_frames=5):
